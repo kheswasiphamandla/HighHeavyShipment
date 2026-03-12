@@ -11,5 +11,15 @@ node_modules/
 /dist/
 /build/
 
+# .NET / Visual Studio
+.vs/
+bin/
+obj/
+obj2/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
 # Ignore environment variable files
 .env
