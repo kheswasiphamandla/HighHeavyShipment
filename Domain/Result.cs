@@ -1,38 +1,39 @@
-// Result.cs
+namespace HighHeavyShipment.Domain;
 
-using System;
-
-namespace HighHeavyShipment.Domain
+public abstract record Result
 {
-    public class Result
-    {
-        public bool IsSuccess { get; private set; }
-        public string Error { get; private set; }
+    public sealed record Success : Result;
+    public sealed record Failure(string Code, string Message) : Result;
 
-        protected Result(bool isSuccess, string error)
+    public bool IsSuccess => this is Success;
+    public bool IsFailure => this is Failure;
+
+    public TResult Match<TResult>(
+        Func<Success, TResult> onSuccess,
+        Func<Failure, TResult> onFailure)
+        => this switch
         {
-            IsSuccess = isSuccess;
-            Error = error;
-        }
+            Success success => onSuccess(success),
+            Failure failure => onFailure(failure),
+            _ => throw new InvalidOperationException("Unknown result type.")
+        };
+}
 
-        public static Result Success() => new Result(true, null);
-        public static Result Failure(string error) => new Result(false, error);
-    }
+public abstract record Result<T>
+{
+    public sealed record Success(T Value) : Result<T>;
+    public sealed record Failure(string Code, string Message) : Result<T>;
 
-    public class Result<T>
-    {
-        public T Value { get; private set; }
-        public bool IsSuccess { get; private set; }
-        public string Error { get; private set; }
+    public bool IsSuccess => this is Success;
+    public bool IsFailure => this is Failure;
 
-        protected Result(bool isSuccess, T value, string error)
+    public TResult Match<TResult>(
+        Func<Success, TResult> onSuccess,
+        Func<Failure, TResult> onFailure)
+        => this switch
         {
-            IsSuccess = isSuccess;
-            Value = value;
-            Error = error;
-        }
-
-        public static Result<T> Success(T value) => new Result<T>(true, value, null);
-        public static Result<T> Failure(string error) => new Result<T>(false, default, error);
-    }
+            Success success => onSuccess(success),
+            Failure failure => onFailure(failure),
+            _ => throw new InvalidOperationException("Unknown result type.")
+        };
 }

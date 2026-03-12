@@ -10,8 +10,7 @@ public static class EndpointExtensions
     public static WebApplication MapShipmentEndpoints(this WebApplication app)
     {
         var group = app.MapGroup("/api/shipments")
-            .WithName("Shipments")
-            .WithOpenApi();
+            .WithName("Shipments");
 
         group.MapPost("/", CreateShipment)
             .WithName("Create Shipment")
