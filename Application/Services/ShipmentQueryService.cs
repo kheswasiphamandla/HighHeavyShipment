@@ -1,4 +1,5 @@
 using HighHeavyShipment.Application.DTOs;
+using HighHeavyShipment.Domain;
 using HighHeavyShipment.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 
