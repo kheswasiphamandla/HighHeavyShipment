@@ -16,7 +16,6 @@ node_modules/
 bin/
 obj/
 obj2/
-Properties/
 *.user
 *.suo
 *.userosscache
