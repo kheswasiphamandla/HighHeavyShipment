@@ -1,0 +1,89 @@
+@page "/"
+@inject NavigationManager Nav
+
+<PageTitle>Overview</PageTitle>
+
+@code {
+    private string BaseUrl => Nav.BaseUri.TrimEnd('/');
+}
+
+<div class="hero">
+    <div class="hero-content">
+        <p class="eyebrow">High &amp; Heavy Shipment</p>
+        <h1>Plan, quote, and advance oversized cargo shipments.</h1>
+        <p class="subhead">
+            This app models shipments with lifecycle states, captures quotes per phase,
+            and exposes minimal API endpoints for operations used by the UI.
+        </p>
+        <div class="hero-actions">
+            <a class="btn-primary" href="shipments">Open Shipments Board</a>
+            <a class="btn-secondary" href="#api">View API Endpoints</a>
+        </div>
+    </div>
+    <div class="hero-card">
+        <h2>Core Flow</h2>
+        <ol>
+            <li>Create shipment (mode, route, weight).</li>
+            <li>Add quotes tied to shipment phase.</li>
+            <li>Advance status through the lifecycle.</li>
+        </ol>
+    </div>
+</div>
+
+<section class="grid">
+    <div class="tile">
+        <h3>Domain Model</h3>
+        <p>
+            Shipments move through defined statuses (quotation, booking, transit, delivery)
+            and collect per-phase quotes with currency validation.
+        </p>
+    </div>
+    <div class="tile">
+        <h3>Application Services</h3>
+        <p>
+            Command and query services enforce business rules and map domain entities to DTOs
+            for the UI and API responses.
+        </p>
+    </div>
+    <div class="tile">
+        <h3>Infrastructure</h3>
+        <p>
+            Entity Framework Core persists shipments and quotes with a single-quote-per-phase
+            constraint and cascading deletes.
+        </p>
+    </div>
+</section>
+
+<section id="api" class="api">
+    <div class="api-header">
+        <h2>API Endpoints</h2>
+        <p>Base URL: <span class="code">@BaseUrl</span></p>
+    </div>
+    <div class="api-list">
+        <div class="api-row">
+            <span class="method">POST</span>
+            <span class="path">@BaseUrl/api/shipments</span>
+            <span class="desc">Create shipment</span>
+        </div>
+        <div class="api-row">
+            <span class="method">GET</span>
+            <span class="path">@BaseUrl/api/shipments</span>
+            <span class="desc">List shipments</span>
+        </div>
+        <div class="api-row">
+            <span class="method">GET</span>
+            <span class="path">@BaseUrl/api/shipments/{id}</span>
+            <span class="desc">Shipment with quotes</span>
+        </div>
+        <div class="api-row">
+            <span class="method">POST</span>
+            <span class="path">@BaseUrl/api/shipments/{id}/quotes</span>
+            <span class="desc">Add quote for phase</span>
+        </div>
+        <div class="api-row">
+            <span class="method">POST</span>
+            <span class="path">@BaseUrl/api/shipments/{id}/status/advance</span>
+            <span class="desc">Advance status</span>
+        </div>
+    </div>
+</section>
