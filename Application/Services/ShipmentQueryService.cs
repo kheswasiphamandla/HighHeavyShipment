@@ -20,10 +20,7 @@ public class ShipmentQueryService : IShipmentQueryService
             .Include(s => s.Quotes)
             .FirstOrDefaultAsync(s => s.Id == shipmentId);
 
-        if (shipment == null)
-            return null;
-
-        return MapToDto(shipment);
+        return shipment == null ? null : MapToDto(shipment);
     }
 
     public async Task<List<ShipmentDto>> GetAllShipmentsAsync()
@@ -37,10 +34,6 @@ public class ShipmentQueryService : IShipmentQueryService
 
     private static ShipmentDto MapToDto(Shipment shipment)
     {
-        var quotes = shipment.Quotes
-            .Select(q => new ShipmentQuoteDto(q.Id, q.Phase, q.Amount, q.Currency, q.CreatedAt))
-            .ToList();
-
         return new ShipmentDto(
             shipment.Id,
             shipment.Reference,
@@ -51,6 +44,8 @@ public class ShipmentQueryService : IShipmentQueryService
             shipment.Status,
             shipment.CreatedAt,
             shipment.UpdatedAt,
-            quotes);
+            shipment.Quotes
+                .Select(q => new ShipmentQuoteDto(q.Id, q.Phase, q.Amount, q.Currency, q.CreatedAt))
+                .ToList());
     }
 }
